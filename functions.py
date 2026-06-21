@@ -26,12 +26,13 @@ def add_list(root, list_listbox):
 
     tk.Label(popup, text="List name:").pack(pady=5)#User Enters the name of the list to create
     entry = tk.Entry(popup)
+    entry.focus_set()
     entry.pack(pady=5)
 
     def save():
         name = entry.get()
         if name != "":
-            lists[name] = []
+            lists[name] = []# puts the name in the listbox
             refresh_lists(list_listbox)#refreshes the lists to update
             popup.destroy()
 
@@ -63,7 +64,7 @@ def open_list(list_listbox, show_frame, list_frame, item_listbox, title_label):
     show_frame(list_frame)
 
 
-#ITEM FUNCTIONS
+#LIST ITEM FUNCTIONS
 
 def add_item(root, item_listbox):
     popup = tk.Toplevel(root)
@@ -71,6 +72,7 @@ def add_item(root, item_listbox):
 
     tk.Label(popup, text="Item:").pack(pady=5)
     entry = tk.Entry(popup)
+    entry.focus_set()
     entry.pack(pady=5)
 
     def save():
