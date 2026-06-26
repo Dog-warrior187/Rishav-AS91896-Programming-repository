@@ -1,9 +1,22 @@
 import tkinter as tk
-
-#TO DO LIST FUNCTIONS VERSION 2
+from tkinter import messagebox
+import json
+import os
+#TO DO LIST FUNCTIONS VERSION 3
 
 lists = {}#stores all lists
 current_list = None#stores which list is open
+def save_data():
+        with open("lists.json", "w") as f:
+            json.dump(lists, f)#save all lists
+
+
+def load_data():
+    global lists
+    if os.path.exists("lists.json"):
+        with open("lists.json", "r") as f:
+            lists = json.load(f)#load saved lists
+
 
 
 #REFRESH FUNCTIONS
@@ -33,6 +46,7 @@ def add_list(root, list_listbox):
         name = entry.get()
         if name != "":
             lists[name] = []#create empty list
+            save_data()#Saves the list
             refresh_lists(list_listbox)#update UI
             popup.destroy()#close popup
 
@@ -43,7 +57,12 @@ def delete_list(list_listbox):
     try:
         index = list_listbox.curselection()[0]#get selected list
         name = list_listbox.get(index)
+        confirm = messagebox.askyesno("Delete list?", f"Delete {name}?")#asks for confirmation from user
+        if not confirm:
+            return
+        
         del lists[name]#delete list
+        save_data()#Saves that list was deleted
         refresh_lists(list_listbox)#update UI
     except:
         pass#ignore if nothing selected
@@ -78,6 +97,7 @@ def add_item(root, item_listbox):
         item = entry.get()
         if item != "":
             lists[current_list].append(item)#add item
+            save_data()#Saves that item was added to the list
             refresh_items(item_listbox)#update UI
             popup.destroy()
 
@@ -89,6 +109,7 @@ def delete_item(item_listbox):
         index = item_listbox.curselection()[0]#get selected item
         item = item_listbox.get(index)
         lists[current_list].remove(item)#delete item
+        save_data()#Saves that item was removed from the list
         refresh_items(item_listbox)#update UI
     except:
         pass#ignore if nothing selected
@@ -101,12 +122,45 @@ def check_item(item_listbox):
 
         if not item.startswith("✓ "):#only add checkmark once
             lists[current_list][index] = "✓ " + item
+            save_data()#Saves that item was checked
             refresh_items(item_listbox)#update UI
     except:
         pass
 
 
-#TOOLTIP SYSTEM
+def move_item_up(item_listbox):
+    try:
+        index = item_listbox.curselection()[0]#selected item
+        if index == 0:
+            return#already at top
+
+        lists[current_list][index], lists[current_list][index-1] = \
+        lists[current_list][index-1], lists[current_list][index]#swap
+        save_data()#Saves that item was moved up
+
+        refresh_items(item_listbox)#update UI
+        item_listbox.select_set(index-1)#keep selection
+    except:
+        pass
+
+
+def move_item_down(item_listbox):
+    try:
+        index = item_listbox.curselection()[0]#selected item
+        if index == len(lists[current_list]) - 1:
+            return#if item already at bottom
+
+        lists[current_list][index], lists[current_list][index+1] = \
+        lists[current_list][index+1], lists[current_list][index]#swap
+        save_data()#Saves that item was moved down
+
+        refresh_items(item_listbox)#update UI
+        item_listbox.select_set(index+1)#keep selection
+    except:
+        pass
+
+    
+#TOOLTIPs
 tooltip = None#tooltip window
 tooltip_label = None#tooltip text label
 tooltip_timer = None#timer for delayed tooltip
@@ -153,3 +207,6 @@ def add_tooltip(widget, text, delay=1000):
 
     widget.bind("<Enter>", schedule_tooltip)#start timer on hover
     widget.bind("<Leave>", hide_tooltip)#hide tooltip on exit
+
+#LIST SAVING FUNCTION
+
