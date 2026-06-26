@@ -1,97 +1,152 @@
 import tkinter as tk
 import functions
 
+#TO DO LIST PROGRAM VERSION 2
+
 root = tk.Tk()
 root.title("To-Do-List")
-root.geometry("230x400")
+root.geometry("370x350")
+functions.create_tooltip_window(root)  # Creates the tooltip system
+
+# Load and resize all icons
+plus_img = tk.PhotoImage(file="plus.png").subsample(15, 15)
+x_img = tk.PhotoImage(file="X.png").subsample(14, 14)
+open_img = tk.PhotoImage(file="open.png").subsample(50, 50)
+check_img = tk.PhotoImage(file="check.png").subsample(50, 50)
+back_img = tk.PhotoImage(file="back.png").subsample(50, 50)
 
 
-#Fram switching
+#Switches between frames
 def show_frame(frame):
     frame.tkraise()
 
 
 #MAIN MENU AND LIST FRAME
-main_menu_frame = tk.Frame(root)
-list_frame = tk.Frame(root)
+main_menu_frame = tk.Frame(root, width=370, height=350, bg="#B8F5E5")
+list_frame = tk.Frame(root, width=370, height=350, bg="#B8F5E5")
 
 main_menu_frame.grid(row=0, column=0, sticky="nsew")
 list_frame.grid(row=0, column=0, sticky="nsew")
 
+#Button frames for grouping buttons
+menu_button_frame = tk.Frame(main_menu_frame, bg="#128C8C")
+menu_button_frame.grid(row=1, column=0, sticky="w")
+
+list_button_frame = tk.Frame(list_frame, bg="#128C8C")
+list_button_frame.grid(row=1, column=0, sticky="w")
+
 
 #MAIN MENU
-title = tk.Label(main_menu_frame, text="Your Lists", font=("Arial", 16))
-title.grid(row=0, column=0, pady=20)
+title = tk.Label(main_menu_frame, text="Your Lists", font=("Arial", 20), bg="#B8F5E5")
+title.grid(row=0, column=1, pady=0)
 
-list_listbox = tk.Listbox(main_menu_frame, width=30)
-list_listbox.grid(row=1, column=0, padx=20)
-#add a list
+subheading = tk.Label(main_menu_frame, text="hover cursor over buttons for instuctions", font=("Arial", 10))
+subheading.grid(row=5, column=1, pady=0)
+
+#Listbox showing all lists
+list_listbox = tk.Listbox(main_menu_frame, width=40, height=15)
+list_listbox.grid(row=1, column=1, padx=0)
+
+#Add list button
 add_list_button = tk.Button(
-    main_menu_frame,
+    menu_button_frame,
+    image=plus_img,
     text="Add List",
+    bg="white",
+    compound="left",
     command=lambda: functions.add_list(root, list_listbox)
 )
-add_list_button.grid(row=2, column=0, pady=10)
-#delete a list
+add_list_button.grid(row=1, column=0, pady=10, padx=5)
+functions.add_tooltip(add_list_button, "Create a new list")
+
+#Delete list button
 delete_list_button = tk.Button(
-    main_menu_frame,
+    menu_button_frame,
+    image=x_img,
     text="Delete List",
+    bg="white",
+    compound="left",
     command=lambda: functions.delete_list(list_listbox)
 )
-delete_list_button.grid(row=3, column=0, pady=10)
+delete_list_button.grid(row=2, column=0, pady=10, padx=5)
+functions.add_tooltip(delete_list_button, "Select a list, then click to delete")
 
-
-#open selected list
+#Open list button
 open_list_button = tk.Button(
-    main_menu_frame,
+    menu_button_frame,
+    image=open_img,
     text="Open List",
+    bg="white",
+    compound="left",
     command=lambda: functions.open_list(
         list_listbox, show_frame, list_frame, item_listbox, list_title
     )
 )
-open_list_button.grid(row=4, column=0, pady=10)
+open_list_button.grid(row=3, column=0, pady=10, padx=5)
+functions.add_tooltip(open_list_button, "Select a list, then click to open")
 
 
 #LIST SCREEN
-list_title = tk.Label(list_frame, text="List Items", font=("Arial", 16))
-list_title.grid(row=0, column=0, pady=20)
+list_title = tk.Label(list_frame, text="List Items", font=("Arial", 20), bg="#B8F5E5")
+list_title.grid(row=0, column=1, pady=0)
 
-item_listbox = tk.Listbox(list_frame, width=30)
-item_listbox.grid(row=1, column=0, padx=20)
+subheading = tk.Label(list_frame, text="hover cursor over buttons for instuctions", font=("Arial", 10))
+subheading.grid(row=4, column=1, pady=0)
 
+#Listbox showing items inside the selected list
+item_listbox = tk.Listbox(list_frame, width=40, height=15)
+item_listbox.grid(row=1, column=1, padx=0)
+
+#Add item button
 add_item_button = tk.Button(
-    list_frame,
-    text="Add Item",
+    list_button_frame,
+    image=plus_img,
+    text="Add item",
+    bg="white",
+    compound="left",
     command=lambda: functions.add_item(root, item_listbox)
 )
-add_item_button.grid(row=2, column=0, pady=5)
+add_item_button.grid(row=1, column=0, pady=10, padx=5)
+functions.add_tooltip(add_item_button, "Click to add an item to the list")
 
-#Deleting an Item from the list
+#Delete item button
 delete_item_button = tk.Button(
-    list_frame,
-    text="Delete Item",
+    list_button_frame,
+    image=x_img,
+    text="Delete item",
+    bg="white",
+    compound="left",
     command=lambda: functions.delete_item(item_listbox)
 )
-delete_item_button.grid(row=3, column=0, pady=5)
+delete_item_button.grid(row=2, column=0, pady=10, padx=5)
+functions.add_tooltip(delete_item_button, "Select an item then click to delete")
 
-#Checking off an Item
+#Check item button
 check_item_button = tk.Button(
-    list_frame,
-    text="Checkmark Item",
+    list_button_frame,
+    text="Check item",
+    bg="white",
+    compound="left",
+    image=check_img,
     command=lambda: functions.check_item(item_listbox)
 )
-check_item_button.grid(row=4, column=0, pady=5)
+check_item_button.grid(row=3, column=0, pady=10, padx=5)
+functions.add_tooltip(check_item_button, "Select an item, then click to checkmark it")
 
-#go back to the main menu
+#Back button
 back_button = tk.Button(
-    list_frame,
-    text="Back",
+    list_button_frame,
+    text=" Go Back",
+    bg="white",
+    compound="left",
+    image=back_img,
     command=lambda: show_frame(main_menu_frame)
 )
-back_button.grid(row=5, column=0, pady=20)
+back_button.grid(row=4, column=0, pady=20)
+functions.add_tooltip(back_button, "Go back to previous menu")
 
 
-#Show the main menu frame
+#Show the main menu first
 show_frame(main_menu_frame)
 
 root.mainloop()
