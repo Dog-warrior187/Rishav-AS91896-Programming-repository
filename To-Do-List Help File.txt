@@ -1,0 +1,31 @@
+TO-DO LIST PROGRAM
+
+Add List  
+Click "Add List" and type a name to create a new list.
+
+Delete List  
+Select a list and click "Delete List".  
+A confirmation message will appear.
+
+Open List  
+Select a list and click "Open List" to view its items.
+
+Add Item  
+Click "Add Item" and type the item you want to add.
+
+Delete Item  
+Select an item and click "Delete Item" to remove it.
+
+Check Item  
+Select an item and click "Check Item" to mark it as completed.
+
+Move Item Up / Down  
+Select an item and click "Move Up" or "Move Down" to reorder it.
+
+Go Back  
+Click "Go Back" to return to the main menu.
+
+Tooltips  
+Hover your mouse over any button to see what it does.
+
+Program saves automatically 
